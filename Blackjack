@@ -1,1 +1,72 @@
 
+//imports
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+
+class BlackjackMenuPanel extends JPanel implements ActionListener {
+
+	boolean menuVisibility = true; 
+
+	public BlackjackMenuPanel() {
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				createAndShowGUI();
+			}
+		});
+	}
+	private void createAndShowGUI() {
+		setLayout(new FlowLayout());
+		JFrame frame = new JFrame("Blackjack");
+		
+		//creating buttons
+		
+		JButton b1 = new JButton("Leaderboard");
+		b1.setActionCommand("Leaderboard");
+		b1.addActionListener(this);
+		add(b1);
+		
+		JButton b2 = new JButton("Play");
+		b2.setActionCommand("Play");
+		b2.addActionListener(this);
+		add(b2);
+
+		JButton b3 = new JButton("Intructions");
+		b3.setActionCommand("Instructions");
+		b3.addActionListener(this);
+		add(b3);
+		
+	}
+	public void actionPerformed(ActionEvent ae) {
+		if(ae.getActionCommand().equals("Play")) {
+			this.setVisible(false);
+			menuVisibility = false;
+		} else if (ae.getActionCommand().equals("Instructions")) {
+			JOptionPane.showMessageDialog(null,"How to play:\r\n" + 
+					"The objective of the game is to have a set of cards \r\n"
+					+ "whose total value beats the opponent’s set of cards’ \r\n"
+					+ "total value without going over the value twenty-one. \r\n"
+					+ "At the beginning, you will decide how much you want \r\n"
+					+ "to bet. Then, each player will be dealt two cards, \r\n"
+					+ "one facing up, one facing down. Cards two to ten are \r\n"
+					+ "their actual values, all face cards have a value of ten, \r\n"
+					+ "and ace has a value of either one or eleven, depending \r\n"
+					+ "on what you want. From there, you have an option to “Hit” \r\n"
+					+ "or “Stand.” Hit meaning you would like another card, but \r\n"
+					+ "you do risk being “Bust,” which is when you have gone over \r\n"
+					+ "twenty-one. Stand means you do not want another card. If \r\n"
+					+ "you win the round, then you gain the bet money and if you \r\n"
+					+ "lose, you don’t get anything.\r\n" + 
+					"Note: Suits do not matter in Blackjack.\r\n"); //gotta fix this make it look like a normal frame?? 
+		} else if (ae.getActionCommand().equals("Leaderboard")) {
+			//open a text file
+			
+		}
+		
+	}
+	public static void openTextFile() {
+		
+	}
+}
