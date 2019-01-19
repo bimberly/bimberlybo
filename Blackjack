@@ -1,15 +1,13 @@
-
 /*
 Game of BlackJack like in the good old Vegas days
  */
 import java.util.*;
 import javax.swing.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class JackBlack extends JPanel implements ActionListener{
+public class JackBlack extends JPanel implements ActionListener {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//variable declarations
@@ -30,7 +28,7 @@ public class JackBlack extends JPanel implements ActionListener{
 		String currentCard;      //determine current card drawn
 		String cardType;      //determines current card's value
 		String plusCard;      //determines if user wants another card
-		String anotherRound = null; 
+		String anotherRound ="yes" ; 
 		//  Coordinate plusCard = null; //determines if user wants to keep playing
 		String[] compCards = new String[11]; //record of computer's card
 		String[] userAces = new String[4];  //record of user's Aces
@@ -43,6 +41,7 @@ public class JackBlack extends JPanel implements ActionListener{
 			count=0;
 			userCash-=2;
 			compCash-=2;
+			anotherRound="no";
 			System.out.println("$2 have been subtracted from each of your totals. $4 are on the table.");
 			for(int i=0; i<compCards.length;i++) {
 				compCards[i]=null;     //clear record of computer's old cards
@@ -111,23 +110,20 @@ public class JackBlack extends JPanel implements ActionListener{
 			b2D.putPeg("yellow_back", 4, 5);
 			b2D.putPeg("purple_back", 5, 12);
 			b2D.putPeg("blue_back", 4, 12);
-			b2D.putPeg("gray_back", 0, 0);
-			int counter =0;
-
+			//int counter =0;
 			//System.out.print("Hit? ");
-
 			//plusCard=input.next();
-			Coordinate selected = b2D.getClick();
-			do {
+			Coordinate selected = null;
+			do{
+				selected = b2D.getClick();
 				if (selected.getCol() == 6 && selected.getRow() == 4) {
 					currentCard=deck[count];
 					cardType=determineCardType(currentCard);
 					value=determineValue(cardType);
 					b2D.putPeg(value + cardType.substring(0,1),  6, newLocation);
 					user+=value;
-
 					newLocation--;
-					counter++;
+					// counter++;
 					b2D.displayMessage("Your total = " + user);
 					if (cardType.equals("Ace")) {
 						value=0;
@@ -135,76 +131,78 @@ public class JackBlack extends JPanel implements ActionListener{
 						userAces[numAcesU]=currentCard;
 						numAcesU++;
 					}
-					user+=value;
-					System.out.println("Card: "+ currentCard + ", value: " + value);
-					System.out.println("Your total = " + user);
+					// System.out.println("Card: "+ currentCard + ", value: " + value);
+					// System.out.println("Your total = " + user);
 					count++;
 				}
-
 				if(numAcesU>0 ){
-
 					for (int i=0; i<4; i++) {
 						if (userAces[i]!=null) {
-							System.out.println("Will the " + userAces[i] + " be equal to 1 or 11?");
+							// System.out.println("Will the " + userAces[i] + " be equal to 1 or 11?");
 							if ( selected.getCol() == 12 && selected.getRow() == 5) {
 								value = (11);
-
+								System.out.println("your ace value is ll");  
 							}else if(selected.getCol() == 12 && selected.getRow() == 4) {
 								value = (1);
+								System.out.println("your ace value is 1");
 							}
 							user+=value;
 							b2D.displayMessage("Your total: " + user);
-							counter++;
+							//counter++;
 						}
 					} 
-				} break;
-			}while(selected.getCol() == 6 && selected.getRow() == 4);
-			//end of round conditional (updates banks)
-
-			System.out.println("Computer's cards:");
-			for (int i=0; i<compCards.length; i++) {
-				if (compCards[i]!=null){
-					System.out.println(compCards[i]);
 				}
+
+				//end of round conditional (updates banks)
+				// System.out.println("Computer's cards:");
+				for (int i=0; i<compCards.length; i++) {
+					if (compCards[i]!=null){
+						//System.out.println(compCards[i]);
+					}
+				}
+				if (selected.getCol() == 5 && selected.getRow() == 4) {//this is the stand button so when this is hit it continues to the u win u lose stuff
+					//System.out.println("asdasdasd");
+					b2D.displayMessage("Computer total = "+ computer);
+					break;
+				}
+				System.out.println(user);
+			}while(user<=21);
+			if(user>21 && computer>21){//put these into a pop up i.e omg u win u savage!!
+				System.out.println("Both over 21, no winners for this round.");
+				userCash+=2;
+				compCash+=2;
+			}else if (computer>21 && user<=21) {
+				System.out.println("Computer is over 21, you win!");
+				userCash+=4;
+			}else if (user>21 && computer<=21) {
+				System.out.println("You are over 21, computer wins!");
+				compCash+=4;
+			}else if (21>=computer && computer>user) {
+				System.out.println("Computer is closer to 21, computer wins!");
+				compCash+=4;
+			}else if (21>=user && user>computer) {
+				System.out.println("You are closer to 21, you win!");
+				userCash+=4;
+			}else if (computer==user) {
+				System.out.println("It's a tie! No winners for this round.");
+				userCash+=2;
+				compCash+=2;
+			}
+			//System.out.println("asdasdasdas");
+			System.out.println("Your current amount: $" + userCash);
+			System.out.println("Computer's current amount: $" + compCash);
+			//asks user if they want to keep playing
+			System.out.print("Next round, baby?");
+			anotherRound=input.next();
+			if(anotherRound.equals("yes")){
+				user=0;
+				computer=0;
+			}else {
+				endingProcedure(userCash);
+				
 			}
 
-			if (selected.getCol() == 5 && selected.getRow() == 4) {
-				System.out.println("Computer total = "+ computer);
-				if(user>21 && computer>21){
-					System.out.println("Both over 21, no winners for this round.");
-					userCash+=2;
-					compCash+=2;
-				}else if (computer>21 && user<=21) {
-					System.out.println("Computer is over 21, you win!");
-					userCash+=4;
-				}else if (user>21 && computer<=21) {
-					System.out.println("You are over 21, computer wins!");
-					compCash+=4;
-				}else if (21>=computer && computer>user) {
-					System.out.println("Computer is closer to 21, computer wins!");
-					compCash+=4;
-				}else if (21>=user && user>computer) {
-					System.out.println("You are closer to 21, you win!");
-					userCash+=4;
-				}else if (computer==user) {
-					System.out.println("It's a tie! No winners for this round.");
-					userCash+=2;
-					compCash+=2;
-				}
-				System.out.println("Your current amount: $" + userCash);
-				System.out.println("Computer's current amount: $" + compCash);
-				//asks user if they want to keep playing
-				System.out.print("Next round, baby?");
-				anotherRound=input.next();
-				if(selected.getCol() == 0 && selected.getRow() == 0){
-					user=0;
-					computer=0;
-				}else {
-					endingProcedure(userCash);
-					playAgainMenu();
-				} 
-			}
-		}while(anotherRound.equals("Play Again?"));
+		}while(anotherRound.equals("yes"));
 	}
 
 
@@ -310,46 +308,27 @@ public class JackBlack extends JPanel implements ActionListener{
 			System.out.println("You broke even!");
 		}
 	}
-
-
-	public static String determineCardSuit(String card){
-		String suitType;
-		int spcIndex;
-		char spc=' ';
-		spcIndex=card.lastIndexOf(spc);
-		suitType=card.substring(spcIndex, card.length());
-		return suitType;
+	public static void resetGame() {
+		//idK
 	}
 	
-	public static void resetGame() {
+	public void playAgainMenu() {
 		
-	}
-
-	public JackBlack() {
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				playAgainMenu();
-			}
-		});
-	}
-
-
-
-	public static void playAgainMenu() {
 		JFrame frame = new JFrame("Blackjack");
-
-		frame.getContentPane();
+		JPanel contentPane = new JPanel(new BorderLayout());
 		
 		//creating buttons
+
 		JButton b1 = new JButton("Play Again?");
 		b1.setActionCommand("Play Again?");
 		b1.addActionListener(this);
-		add(b1);
+		contentPane.add(b1);
 
 		JButton b2 = new JButton("Exit");
 		b2.setActionCommand("Exit");
 		b2.addActionListener(this);
-		add(b2);
+		contentPane.add(b2);
+
 
 	}
 
@@ -363,6 +342,6 @@ public class JackBlack extends JPanel implements ActionListener{
 			System.exit(0);
 		}
 	}
-}
 
+}
 
