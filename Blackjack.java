@@ -7,11 +7,131 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class JackBlack extends JPanel implements ActionListener {
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+public class Blackjack extends JPanel implements ActionListener {
+	
+	//constructor
+	public Blackjack() {
+		resetGame();
+	}
+	
+	//fields
+	Board b2D = new Board(8,13);
+
+	/**
+	 * Value a black jack hand
+	 */
+	public static int valueHand(String[] hand){
+		int total = 0, i=0, numAces=0;
+		while (hand[i]!=null) {
+			String cardType=determineCardType(hand[i]);
+			int value=determineValue(cardType);
+			if (cardType.equals("Ace")) {
+				numAces++;
+			}
+			total+=value;
+			i++;
+		}
+		// Compensate for Aces having possible value of 1 to bring total under 21
+		while (total>21 && numAces>0) {
+			total-=10;
+			numAces--;
+		}
+		return total;
+	}
+
+	/**
+  Makes a randomly arranged deck (David Hua helped me)
+  pre:
+  post:
+	 */
+	public static String[] prepareDeck() {
+		//declare deck
+		String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+		String[] rank = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+		String[] deck = new String[52];
+		Random r = new Random();
+		for (int i=0; i<52; i++) {
+			deck[i]=rank[r.nextInt(13)]+ " of " + suits[r.nextInt(4)];
+			for(int x=0; x<i; x++){
+				if (deck[x].equals(deck[i])) {
+					i--;
+				}
+			}
+		}
+		return(deck);
+	}
+	/**
+  Determines card rank
+  pre:
+  post:
+	 */
+	public static String determineCardType(String card){
+		String cardType;
+		int spcIndex;
+		char spc=' ';
+		spcIndex=card.indexOf(spc);
+		cardType=card.substring(0, spcIndex);
+		return cardType;
+	}
+	/**
+  Assigns int value corresponding to card rank
+  pre:
+  post:
+	 */
+	public static int determineValue(String type) {
+		int value;
+		if (type.equals("2")) {
+			value =2;
+		} else if (type.equals("3")) {
+			value=3;
+		} else if (type.equals("4")) {
+			value=4;
+		} else if (type.equals("5")) {
+			value=5;
+		} else if (type.equals("6")) {
+			value=6;
+		}else if (type.equals("7")) {
+			value=7;
+		}else if (type.equals("8")) {
+			value=8;
+		}else if (type.equals("9")) {
+			value=9;
+		}else if (type.equals("10") || type.equals("Jack") || type.equals("Queen") || type.equals("King")) {
+			value=10;
+		}else{
+			value=11;
+		}
+		return(value);
+	}
+	/**
+  Displays final results
+  pre:
+  post:
+	 */ 
+	public static void endingProcedure(int userCash) {
+		int difference=Math.abs(userCash-100);
+		System.out.println("The game is over.");
+		if(userCash>100){
+			System.out.println("Congratulations! You won $" + difference + ".");
+		}else if(userCash<100){
+			System.out.println("You suck at gambling. You lost $" + difference + ".");
+		}else {
+			System.out.println("You broke even!");
+		}
+	}
+	
+	public void resetBoard() {
+		for(int i=0;i<b2D.WIDTH;i++) {
+			for(int j=0;j<b2D.HEIGHT;j++) {
+				b2D.removePeg(i, j);
+			}
+		}
+	}
+	
+	public void resetGame() {
 		//variable declarations
-		Board b2D = new Board (8,13);
+		resetBoard();
+		b2D.f.setVisible(true);
 		int value = 0;        //value of card drawn (i.e. Jack is 10)
 		int count=0;       //keeps track of index position of card drawn
 		int user=0;        //counter - stores user's card sum
@@ -28,7 +148,7 @@ public class JackBlack extends JPanel implements ActionListener {
 		String currentCard;      //determine current card drawn
 		String cardType;      //determines current card's value
 		String plusCard;      //determines if user wants another card
-		String anotherRound ="yes" ; 
+		String anotherRound ="" ; 
 		//  Coordinate plusCard = null; //determines if user wants to keep playing
 		String[] compCards = new String[11]; //record of computer's card
 		String[] userAces = new String[4];  //record of user's Aces
@@ -41,7 +161,6 @@ public class JackBlack extends JPanel implements ActionListener {
 			count=0;
 			userCash-=2;
 			compCash-=2;
-			anotherRound="no";
 			System.out.println("$2 have been subtracted from each of your totals. $4 are on the table.");
 			for(int i=0; i<compCards.length;i++) {
 				compCards[i]=null;     //clear record of computer's old cards
@@ -192,144 +311,42 @@ public class JackBlack extends JPanel implements ActionListener {
 			System.out.println("Your current amount: $" + userCash);
 			System.out.println("Computer's current amount: $" + compCash);
 			//asks user if they want to keep playing
-			System.out.print("Next round, baby?");
-			anotherRound=input.next();
+			anotherRound=JOptionPane.showInputDialog("Next round, baby?");
 			if(anotherRound.equals("yes")){
 				user=0;
 				computer=0;
 			}else {
 				endingProcedure(userCash);
-				
 			}
-
-		}while(anotherRound.equals("yes"));
-	}
-
-
-	/**
-	 * Value a black jack hand
-	 */
-	public static int valueHand(String[] hand){
-		int total = 0, i=0, numAces=0;
-		while (hand[i]!=null) {
-			String cardType=determineCardType(hand[i]);
-			int value=determineValue(cardType);
-			if (cardType.equals("Ace")) {
-				numAces++;
-			}
-			total+=value;
-			i++;
-		}
-		// Compensate for Aces having possible value of 1 to bring total under 21
-		while (total>21 && numAces>0) {
-			total-=10;
-			numAces--;
-		}
-		return total;
-	}
-
-	/**
-  Makes a randomly arranged deck (David Hua helped me)
-  pre:
-  post:
-	 */
-	public static String[] prepareDeck() {
-		//declare deck
-		String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-		String[] rank = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-		String[] deck = new String[52];
-		Random r = new Random();
-		for (int i=0; i<52; i++) {
-			deck[i]=rank[r.nextInt(13)]+ " of " + suits[r.nextInt(4)];
-			for(int x=0; x<i; x++){
-				if (deck[x].equals(deck[i])) {
-					i--;
-				}
-			}
-		}
-		return(deck);
-	}
-	/**
-  Determines card rank
-  pre:
-  post:
-	 */
-	public static String determineCardType(String card){
-		String cardType;
-		int spcIndex;
-		char spc=' ';
-		spcIndex=card.indexOf(spc);
-		cardType=card.substring(0, spcIndex);
-		return cardType;
-	}
-	/**
-  Assigns int value corresponding to card rank
-  pre:
-  post:
-	 */
-	public static int determineValue(String type) {
-		int value;
-		if (type.equals("2")) {
-			value =2;
-		} else if (type.equals("3")) {
-			value=3;
-		} else if (type.equals("4")) {
-			value=4;
-		} else if (type.equals("5")) {
-			value=5;
-		} else if (type.equals("6")) {
-			value=6;
-		}else if (type.equals("7")) {
-			value=7;
-		}else if (type.equals("8")) {
-			value=8;
-		}else if (type.equals("9")) {
-			value=9;
-		}else if (type.equals("10") || type.equals("Jack") || type.equals("Queen") || type.equals("King")) {
-			value=10;
-		}else{
-			value=11;
-		}
-		return(value);
-	}
-	/**
-  Displays final results
-  pre:
-  post:
-	 */ 
-	public static void endingProcedure(int userCash) {
-		int difference=Math.abs(userCash-100);
-		System.out.println("The game is over.");
-		if(userCash>100){
-			System.out.println("Congratulations! You won $" + difference + ".");
-		}else if(userCash<100){
-			System.out.println("You suck at gambling. You lost $" + difference + ".");
-		}else {
-			System.out.println("You broke even!");
-		}
-	}
-	public static void resetGame() {
-		//idK
+		}while(anotherRound.equals("yes") || userCash < 0);
+		
+		playAgainMenu();
 	}
 	
 	public void playAgainMenu() {
 		
 		JFrame frame = new JFrame("Blackjack");
 		JPanel contentPane = new JPanel(new BorderLayout());
+		contentPane.setVisible(true);
 		
 		//creating buttons
 
 		JButton b1 = new JButton("Play Again?");
 		b1.setActionCommand("Play Again?");
 		b1.addActionListener(this);
-		contentPane.add(b1);
+		b1.setVisible(true);
+		contentPane.add(b1, BorderLayout.CENTER);
 
 		JButton b2 = new JButton("Exit");
 		b2.setActionCommand("Exit");
 		b2.addActionListener(this);
-		contentPane.add(b2);
+		b2.setVisible(true);
+		contentPane.add(b2, BorderLayout.EAST);
 
-
+		frame.setSize(300, 100);
+		frame.setVisible(true);
+		frame.toFront();
+		frame.add(contentPane);
 	}
 
 	@Override
@@ -338,10 +355,14 @@ public class JackBlack extends JPanel implements ActionListener {
 		if(argae.getActionCommand().equals("Play Again?")) {
 			this.setVisible(false);
 			//clear cards, shuffle deck, and restart basically
+			resetGame();
 		} else if(argae.getActionCommand().equals("Exit")) {
 			System.exit(0);
 		}
 	}
+	
+	public static void main(String[] args) {
+		Blackjack b = new Blackjack();
+	}
 
 }
-
