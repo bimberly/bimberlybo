@@ -20,6 +20,8 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 	boolean menuVisibility = true; 
 
 	public BlackJackMainPanel() {
+		super(new BorderLayout());
+		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
@@ -32,17 +34,14 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 	 * post:
 	 */
 	private void createAndShowGUI() {
-		setLayout(new FlowLayout());
 		JFrame frame = new JFrame("Blackjack");
 
 		try {
 			ImageIcon cards =  new ImageIcon(ImageIO.read(getClass().getResource("Pictures/blackjackcards.gif")));
 			JLabel welcome = new JLabel("Welcome to Blackjack!", JLabel.CENTER);
-			welcome.setVerticalTextPosition(JLabel.RIGHT);
-			welcome.setHorizontalTextPosition(JLabel.CENTER);
 			welcome.setIcon(cards);
 			welcome.setVisible(true);
-			this.add(welcome);
+			this.add(welcome, BorderLayout.NORTH);
 		} catch (Exception e) {System.out.println(e);};
 
 
@@ -63,7 +62,7 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 		b3.addActionListener(this);
 		this.add(b3, BorderLayout.EAST);
 
-		frame.setSize(250, 150);
+		frame.setSize(400, 500);
 		frame.setVisible(true);
 		frame.toFront();
 		frame.add(this);
