@@ -28,6 +28,8 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 				createAndShowGUI();
 			}
 		});
+		
+		Blackjack b1 = new Blackjack();
 	}
 	/**
 	 * Creates Frame with Buttons
@@ -75,7 +77,16 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 			menuVisibility = false;
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 			
-			Blackjack b = new Blackjack();
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					Blackjack b = new Blackjack();
+					try {
+                        sleep(10);  // milliseconds
+                     } catch (InterruptedException ex) {}
+				}
+			};
+			t.start();
 		} else if (ae.getActionCommand().equals("How to Play")) {
 			JOptionPane.showMessageDialog(null,"How to play:\r\n" + 
 					"The objective of the game is to have a set of cards whose total \r\n"
