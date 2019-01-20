@@ -28,8 +28,6 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 				createAndShowGUI();
 			}
 		});
-		
-		Blackjack b1 = new Blackjack();
 	}
 	/**
 	 * Creates Frame with Buttons
