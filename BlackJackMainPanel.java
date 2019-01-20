@@ -63,7 +63,7 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 		b3.addActionListener(this);
 		contentPane.add(b3, BorderLayout.EAST);
 
-		this.setSize(400, 600);
+		this.setSize(300, 150);
 		this.setVisible(true);
 		this.toFront();
 		this.add(contentPane);
@@ -78,7 +78,7 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 			Thread t = new Thread() {
 				@Override
 				public void run() {
-					Blackjack b = new Blackjack();
+					JackBlack b = new JackBlack();
 					try {
                         sleep(10);  // milliseconds
                      } catch (InterruptedException ex) {}
