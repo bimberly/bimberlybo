@@ -7,15 +7,22 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class Blackjack extends JPanel implements ActionListener {
-	
-	//constructor
-	public Blackjack() {
-		resetGame();
-	}
-	
+public class Blackjack {
+
 	//fields
 	Board b2D = new Board(8,13);
+	JFrame frame, f;
+
+	//constructor
+	public Blackjack() {
+		f = new JFrame("Board Game");
+		f.setResizable(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setContentPane(b2D);
+		f.pack();
+		f.setVisible(true);
+		resetGame();
+	}
 
 	/**
 	 * Value a black jack hand
@@ -119,19 +126,19 @@ public class Blackjack extends JPanel implements ActionListener {
 			System.out.println("You broke even!");
 		}
 	}
-	
+
 	public void resetBoard() {
-		for(int i=0;i<b2D.WIDTH;i++) {
-			for(int j=0;j<b2D.HEIGHT;j++) {
+		for(int i=0;i<b2D.getRows();i++) {
+			for(int j=0;j<b2D.getColumns();j++) {
 				b2D.removePeg(i, j);
 			}
 		}
 	}
-	
+
 	public void resetGame() {
 		//variable declarations
 		resetBoard();
-		b2D.f.setVisible(true);
+		
 		int value = 0;        //value of card drawn (i.e. Jack is 10)
 		int count=0;       //keeps track of index position of card drawn
 		int user=0;        //counter - stores user's card sum
@@ -148,7 +155,7 @@ public class Blackjack extends JPanel implements ActionListener {
 		String currentCard;      //determine current card drawn
 		String cardType;      //determines current card's value
 		String plusCard;      //determines if user wants another card
-		String anotherRound ="" ; 
+		String anotherRound ="yes"; 
 		//  Coordinate plusCard = null; //determines if user wants to keep playing
 		String[] compCards = new String[11]; //record of computer's card
 		String[] userAces = new String[4];  //record of user's Aces
@@ -235,6 +242,7 @@ public class Blackjack extends JPanel implements ActionListener {
 			Coordinate selected = null;
 			do{
 				selected = b2D.getClick();
+				System.out.println(selected.getCol() + selected.getRow());
 				if (selected.getCol() == 6 && selected.getRow() == 4) {
 					currentCard=deck[count];
 					cardType=determineCardType(currentCard);
@@ -319,48 +327,8 @@ public class Blackjack extends JPanel implements ActionListener {
 				endingProcedure(userCash);
 			}
 		}while(anotherRound.equals("yes") || userCash < 0);
-		
-		playAgainMenu();
-	}
-	
-	public void playAgainMenu() {
-		
-		JFrame frame = new JFrame("Blackjack");
-		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setVisible(true);
-		
-		//creating buttons
-
-		JButton b1 = new JButton("Play Again?");
-		b1.setActionCommand("Play Again?");
-		b1.addActionListener(this);
-		b1.setVisible(true);
-		contentPane.add(b1, BorderLayout.CENTER);
-
-		JButton b2 = new JButton("Exit");
-		b2.setActionCommand("Exit");
-		b2.addActionListener(this);
-		b2.setVisible(true);
-		contentPane.add(b2, BorderLayout.EAST);
-
-		frame.setSize(300, 100);
-		frame.setVisible(true);
-		frame.toFront();
-		frame.add(contentPane);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent argae) {
-		// TODO Auto-generated method stub
-		if(argae.getActionCommand().equals("Play Again?")) {
-			this.setVisible(false);
-			//clear cards, shuffle deck, and restart basically
-			resetGame();
-		} else if(argae.getActionCommand().equals("Exit")) {
-			System.exit(0);
-		}
-	}
-	
 	public static void main(String[] args) {
 		Blackjack b = new Blackjack();
 	}
