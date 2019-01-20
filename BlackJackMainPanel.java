@@ -38,7 +38,7 @@ class BlackJackMainPanel extends JFrame implements ActionListener {
 		JPanel contentPane = new JPanel(new BorderLayout());
 
 		try {
-			ImageIcon cards =  new ImageIcon(ImageIO.read(getClass().getResource("blobmelt.PNG")));
+			ImageIcon cards =  new ImageIcon(ImageIO.read(getClass().getResource("blackjackcard.gif")));
 			JLabel welcome = new JLabel("Welcome to Blackjack!", JLabel.CENTER);
 			welcome.setIcon(cards);
 			welcome.setVisible(true);
