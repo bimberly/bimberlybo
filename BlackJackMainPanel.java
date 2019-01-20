@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -15,12 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 
-class BlackJackMainPanel extends JPanel implements ActionListener {
+class BlackJackMainPanel extends JFrame implements ActionListener {
 
 	boolean menuVisibility = true; 
 
 	public BlackJackMainPanel() {
-		super(new BorderLayout());
+		super("Blackjack"); 
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -34,14 +35,14 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 	 * post:
 	 */
 	private void createAndShowGUI() {
-		JFrame frame = new JFrame("Blackjack");
+		JPanel contentPane = new JPanel(new BorderLayout());
 
 		try {
-			ImageIcon cards =  new ImageIcon(ImageIO.read(getClass().getResource("Pictures/blackjackcards.gif")));
+			ImageIcon cards =  new ImageIcon(ImageIO.read(getClass().getResource("blobmelt.PNG")));
 			JLabel welcome = new JLabel("Welcome to Blackjack!", JLabel.CENTER);
 			welcome.setIcon(cards);
 			welcome.setVisible(true);
-			this.add(welcome, BorderLayout.NORTH);
+			contentPane.add(welcome, BorderLayout.NORTH);
 		} catch (Exception e) {System.out.println(e);};
 
 
@@ -50,28 +51,31 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 		JButton b1 = new JButton("Leaderboard");
 		b1.setActionCommand("Leaderboard");
 		b1.addActionListener(this);
-		this.add(b1, BorderLayout.WEST);
+		contentPane.add(b1, BorderLayout.WEST);
 
 		JButton b2 = new JButton("Play");
 		b2.setActionCommand("Play");
 		b2.addActionListener(this);
-		this.add(b2, BorderLayout.CENTER);
+		contentPane.add(b2, BorderLayout.CENTER);
 
 		JButton b3 = new JButton("How to Play");
 		b3.setActionCommand("How to Play");
 		b3.addActionListener(this);
-		this.add(b3, BorderLayout.EAST);
+		contentPane.add(b3, BorderLayout.EAST);
 
-		frame.setSize(400, 500);
-		frame.setVisible(true);
-		frame.toFront();
-		frame.add(this);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(400, 600);
+		this.setVisible(true);
+		this.toFront();
+		this.add(contentPane);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("Play")) {
-			this.setVisible(false);
+			this.getContentPane().setVisible(false);
 			menuVisibility = false;
+			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+			
+			Blackjack b = new Blackjack();
 		} else if (ae.getActionCommand().equals("How to Play")) {
 			JOptionPane.showMessageDialog(null,"How to play:\r\n" + 
 					"The objective of the game is to have a set of cards whose total \r\n"
