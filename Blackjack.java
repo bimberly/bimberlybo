@@ -125,6 +125,28 @@ public class Blackjack {
 		}else {
 			System.out.println("You broke even!");
 		}
+
+		String name = JOptionPane.showInputDialog("Please enter your name: ");
+		try {
+			Scanner sc = new Scanner(new File("src/highscores.txt"));
+			boolean done = false;
+			ArrayList<String> toDo = new ArrayList<String>();
+			while(sc.hasNextLine()) {
+				String cur = sc.next();
+				int score = sc.nextInt();
+				if(score <= userCash && !done) {
+					done = true;
+					toDo.add(name + " " + userCash);
+				}
+				toDo.add(cur + " " + score);
+				if(toDo.size()==10) break;
+			}
+			System.setOut(new PrintStream(new FileOutputStream("src/resources/highscores.txt")));
+			for(int i=0;i<9;i++) System.out.println(toDo.get(i));
+			System.out.print(toDo.get(9));
+		} catch(Exception e) {};
+		
+		System.exit(0);
 	}
 
 	public void resetBoard() {
@@ -138,7 +160,7 @@ public class Blackjack {
 	public void resetGame() {
 		//variable declarations
 		resetBoard();
-		
+
 		int value = 0;        //value of card drawn (i.e. Jack is 10)
 		int count=0;       //keeps track of index position of card drawn
 		int user=0;        //counter - stores user's card sum
@@ -323,10 +345,9 @@ public class Blackjack {
 			if(anotherRound.equals("yes")){
 				user=0;
 				computer=0;
-			}else {
-				endingProcedure(userCash);
 			}
-		}while(anotherRound.equals("yes") || userCash < 0);
+		} while(anotherRound.equals("yes") || userCash < 0);
+		endingProcedure(userCash);
 	}
 
 	public static void main(String[] args) {
