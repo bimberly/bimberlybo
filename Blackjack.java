@@ -141,7 +141,7 @@ public class Blackjack {
 				toDo.add(cur + " " + score);
 				if(toDo.size()==10) break;
 			}
-			System.setOut(new PrintStream(new FileOutputStream("src/resources/highscores.txt")));
+			System.setOut(new PrintStream(new FileOutputStream("src/highscores.txt")));
 			for(int i=0;i<9;i++) System.out.println(toDo.get(i));
 			System.out.print(toDo.get(9));
 		} catch(Exception e) {};
@@ -190,6 +190,8 @@ public class Blackjack {
 			count=0;
 			userCash-=2;
 			compCash-=2;
+			resetBoard();
+			location = 5;
 			System.out.println("$2 have been subtracted from each of your totals. $4 are on the table.");
 			for(int i=0; i<compCards.length;i++) {
 				compCards[i]=null;     //clear record of computer's old cards
@@ -348,10 +350,6 @@ public class Blackjack {
 			}
 		} while(anotherRound.equals("yes") || userCash < 0);
 		endingProcedure(userCash);
-	}
-
-	public static void main(String[] args) {
-		Blackjack b = new Blackjack();
 	}
 
 }
