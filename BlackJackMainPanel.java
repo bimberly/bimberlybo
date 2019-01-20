@@ -41,6 +41,8 @@ class BlackJackMainPanel extends JPanel implements ActionListener {
 			welcome.setVerticalTextPosition(JLabel.RIGHT);
 			welcome.setHorizontalTextPosition(JLabel.CENTER);
 			welcome.setIcon(cards);
+			welcome.setVisible(true);
+			this.add(welcome);
 		} catch (Exception e) {System.out.println(e);};
 
 
