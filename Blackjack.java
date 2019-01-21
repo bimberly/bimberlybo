@@ -1,20 +1,21 @@
 /*
 Game of BlackJack like in the good old Vegas days
  */
-import java.util.*;
+import java.util.*; 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class Blackjack {
+public class JackBlack {
 
+	boolean menuVisibility = true; 
 	//fields
 	Board b2D = new Board(8,13);
 	JFrame frame, f;
 
 	//constructor
-	public Blackjack() {
+	public JackBlack() {
 		f = new JFrame("Board Game");
 		f.setResizable(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +82,20 @@ public class Blackjack {
 		return cardType;
 	}
 	/**
+	 Determines card's suit
+	 pre: Card name must have 2 spaces
+	 post: nothing
+	 */
+	public static String determineSuit(String card) {
+		String suit;
+		int lastSpcIndex;
+		char spc=' ';
+		lastSpcIndex=card.lastIndexOf(spc);
+		suit=card.substring(lastSpcIndex + 1);
+		return suit;
+	}
+
+	/**
   Assigns int value corresponding to card rank
   pre:
   post:
@@ -145,7 +160,7 @@ public class Blackjack {
 			for(int i=0;i<9;i++) System.out.println(toDo.get(i));
 			System.out.print(toDo.get(9));
 		} catch(Exception e) {};
-		
+
 		System.exit(0);
 	}
 
@@ -232,7 +247,17 @@ public class Blackjack {
 				count++;
 				cardType=determineCardType(currentCard);
 				value=determineValue(cardType);
-				b2D.putPeg(cardType.substring(0,1) + currentCard.substring(0, 1) ,  6, userLocation);
+				String suit = determineSuit(currentCard);
+				if( suit.equals("Hearts")) {
+					b2D.putPeg(cardType.substring(0,1) + "H" ,  6, userLocation);
+				}else if ( suit.equals("Spades")) {
+					b2D.putPeg(cardType.substring(0,1) + "S" ,  6, userLocation); 
+				}else if (suit.equals("Clubs")) {
+					b2D.putPeg(cardType.substring(0,1) + "C" ,  6, userLocation);
+				}else{
+					b2D.putPeg(cardType.substring(0,1) + "D" ,  6, userLocation);
+				}
+				userLocation++;
 				if (cardType.equals("Ace")){
 					value=0;
 					System.out.println("You will choose the value of the Ace later.");
@@ -271,7 +296,17 @@ public class Blackjack {
 					currentCard=deck[count];
 					cardType=determineCardType(currentCard);
 					value=determineValue(cardType);
-					b2D.putPeg(value + cardType.substring(0,1),  6, newLocation);
+					String suit = determineSuit(currentCard);
+					if( suit.equals("Hearts")) {
+						b2D.putPeg(cardType.substring(0,1) + "H" ,  6, newLocation);
+					}else if ( suit.equals("Spades")) {
+						b2D.putPeg(cardType.substring(0,1) + "S" ,  6, newLocation); 
+					}else if (suit.equals("Clubs")) {
+						b2D.putPeg(cardType.substring(0,1) + "C" ,  6, newLocation);
+					}else{
+						b2D.putPeg(cardType.substring(0,1) + "D" ,  6, newLocation);
+					}
+
 					user+=value;
 					newLocation--;
 					// counter++;
@@ -323,33 +358,60 @@ public class Blackjack {
 				userCash+=2;
 				compCash+=2;
 			}else if (computer>21 && user<=21) {
-				System.out.println("Computer is over 21, you win!");
+				anotherRound=JOptionPane.showInputDialog("Next round, baby?");
 				userCash+=4;
+				if(anotherRound.equals("yes")){
+					user=0;
+					computer=0;
+				}
 			}else if (user>21 && computer<=21) {
-				System.out.println("You are over 21, computer wins!");
+				anotherRound=JOptionPane.showInputDialog("You are over 21, computer wins! \r\n"
+						+ "Next round, baby?");
 				compCash+=4;
+				if(anotherRound.equals("yes")){
+					user=0;
+					computer=0;
+				}
 			}else if (21>=computer && computer>user) {
-				System.out.println("Computer is closer to 21, computer wins!");
+				anotherRound=JOptionPane.showInputDialog("Computer is closer to 21, computer wins! \r\n"
+					+	"Next round, baby?");
 				compCash+=4;
+				if(anotherRound.equals("yes")){
+					user=0;
+					computer=0;
+				}
 			}else if (21>=user && user>computer) {
-				System.out.println("You are closer to 21, you win!");
+				anotherRound=JOptionPane.showInputDialog("You are closer to 21, you win! \r\n"
+						+ "Next round, baby?");
 				userCash+=4;
+				if(anotherRound.equals("yes")){
+					user=0;
+					computer=0;
+				}
 			}else if (computer==user) {
-				System.out.println("It's a tie! No winners for this round.");
+				anotherRound=JOptionPane.showInputDialog("It's a tie! \r\n"
+						+	"Next round, baby?");
 				userCash+=2;
 				compCash+=2;
+				if(anotherRound.equals("yes")){
+					user=0;
+					computer=0;
+				
+				}
 			}
 			//System.out.println("asdasdasdas");
 			System.out.println("Your current amount: $" + userCash);
 			System.out.println("Computer's current amount: $" + compCash);
 			//asks user if they want to keep playing
-			anotherRound=JOptionPane.showInputDialog("Next round, baby?");
-			if(anotherRound.equals("yes")){
-				user=0;
-				computer=0;
-			}
+			//anotherRound=JOptionPane.showInputDialog("Next round, baby?");
+		
+			
 		} while(anotherRound.equals("yes") || userCash < 0);
 		endingProcedure(userCash);
+	}
+
+	public static void main(String[] args) {
+		JackBlack b = new JackBlack();
 	}
 
 }
